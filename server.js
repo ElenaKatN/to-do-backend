@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json());
@@ -26,11 +27,12 @@ app.post("/api/todos", (req, res) => {
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  const path = require("path");
-  app.use(express.static(path.join(__dirname, "client/build")));
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
-  );
+  app.use(express.static(path.join(__dirname, "client", "build")));
+
+  // Use a regex instead of "*"
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
 }
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
