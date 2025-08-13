@@ -5,7 +5,11 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-app.use(cors());
+app.use(cors({
+  origin: "*",          // allow all origins (for testing)
+  methods: ["GET","POST","PUT","DELETE"],
+  allowedHeaders: ["Content-Type"]
+}));
 app.use(express.json());
 
 // In-memory todos (replace with DB later if needed)
